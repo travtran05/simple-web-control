@@ -1,6 +1,7 @@
 from motor_test import test_motor
 import time
 from pymavlink import mavutil
+import socket
 
 
 def arm_rov(mav_connection):
@@ -35,7 +36,23 @@ def run_motors_timed(mav_connection, seconds: int, motor_settings: list) -> None
             test_motor(mav_connection=mav_connection, motor_id=i, power=motor_settings[i])
         time.sleep(0.2)
 
+mav_connection = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
 if __name__ == "__main__":
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect(('10.29.120.78', 8669))
+        s.sendall(b'100')
+        data = s.recv(1024)
+
+    print(f"Received {data!r}")
+    
+
+
+    '''
+
+    
+
+
+
     ####
     # Initialize ROV
     ####
@@ -93,3 +110,7 @@ if __name__ == "__main__":
     ####
     disarm_rov(mav_connection)
     print("disarmed")
+
+    
+
+    '''
