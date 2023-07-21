@@ -54,34 +54,32 @@ if __name__ == "__main__":
     Call sequence of calls to run_timed_motors to execute choreography
     Motors power ranges from -100 to 100
     """
-    
+    sec = 3.8325
    
-    for i in range(2):
-        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[-100,-100 ,0 ,100, 0, 0])
+    for i in range(4):
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[-100,-100 ,0 ,100, 0, 0])
         print("command one")
-        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,100,0,100, 0, 0])
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,100,0,100, 0, 0])
         print("command two")
 
-        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,0 ,-100 ,-100, 0, 0])
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0 ,-100 ,-100, 0, 0])
         print("command three")
-        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,0, 100,100, 0, 0])
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0, 100,100, 0, 0])
         print("command four")
        
-    run_motors_timed(mav_connection, seconds=4, motor_settings=[-100,-100 ,0 ,100, 0, 0])
-    print("command one")
-    run_motors_timed(mav_connection, seconds=4, motor_settings=[100,100,0,100, 0, 0])
-    print("command two")
+    run_motors_timed(mav_connection, seconds=5.815, motor_settings=[100, 0 ,0 ,100, 0, 0])
+    print("turn")
 
 
-    for i in range(2):
-        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[-100,-100 ,0 ,100, 0, 0])
+    for i in range(4):
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[-100,-100 ,0 ,100, 0, 0])
         print("command one")
-        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,100,0,100, 0, 0])
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,100,0,100, 0, 0])
         print("command two")
 
-        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,0 ,-100 ,-100, 0, 0])
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0 ,-100 ,-100, 0, 0])
         print("command three")
-        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,0, 100,100, 0, 0])
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0, 100,100, 0, 0])
         print("command four")
 
 
