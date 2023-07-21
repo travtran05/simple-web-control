@@ -2,7 +2,6 @@ from motor_test import test_motor
 import time
 from pymavlink import mavutil
 
-
 def arm_rov(mav_connection):
     """
     Arm the ROV, wait for confirmation
@@ -47,13 +46,6 @@ if __name__ == "__main__":
 
     print("ARMED")
 
-    ####
-    # Run choreography
-    ####
-    """
-    Call sequence of calls to run_timed_motors to execute choreography
-    Motors power ranges from -100 to 100
-    """
     sec = 3.8325
    
     for i in range(4):
@@ -70,7 +62,6 @@ if __name__ == "__main__":
     run_motors_timed(mav_connection, seconds=5.815, motor_settings=[100, 0 ,0 ,100, 0, 0])
     print("turn")
 
-
     for i in range(4):
         run_motors_timed(mav_connection, seconds=sec, motor_settings=[-100,-100 ,0 ,100, 0, 0])
         print("command one")
@@ -81,9 +72,6 @@ if __name__ == "__main__":
         print("command three")
         run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0, 100,100, 0, 0])
         print("command four")
-
-
-
 
     # stop
     run_motors_timed(mav_connection, seconds=5, motor_settings=[0, 0, 0, 0, 0, 0])
