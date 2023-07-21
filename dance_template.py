@@ -56,15 +56,32 @@ if __name__ == "__main__":
     """
     
    
-    for i in range(10):
-        run_motors_timed(mav_connection, seconds=3.75, motor_settings=[-100,-100 ,0 ,100, 0, 0])
+    for i in range(2):
+        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[-100,-100 ,0 ,100, 0, 0])
         print("command one")
-        run_motors_timed(mav_connection, seconds=3.75, motor_settings=[100,100,0,100, 0, 0])
+        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,100,0,100, 0, 0])
         print("command two")
 
-        run_motors_timed(mav_connection, seconds=3.75, motor_settings=[100,0 ,-100 ,-100, 0, 0])
+        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,0 ,-100 ,-100, 0, 0])
         print("command three")
-        run_motors_timed(mav_connection, seconds=3.75, motor_settings=[100,0, 100,100, 0, 0])
+        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,0, 100,100, 0, 0])
+        print("command four")
+       
+    run_motors_timed(mav_connection, seconds=4, motor_settings=[-100,-100 ,0 ,100, 0, 0])
+    print("command one")
+    run_motors_timed(mav_connection, seconds=4, motor_settings=[100,100,0,100, 0, 0])
+    print("command two")
+
+
+    for i in range(2):
+        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[-100,-100 ,0 ,100, 0, 0])
+        print("command one")
+        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,100,0,100, 0, 0])
+        print("command two")
+
+        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,0 ,-100 ,-100, 0, 0])
+        print("command three")
+        run_motors_timed(mav_connection, seconds=3.825, motor_settings=[100,0, 100,100, 0, 0])
         print("command four")
 
 
