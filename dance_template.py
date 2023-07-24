@@ -45,6 +45,9 @@ if __name__ == "__main__":
     HOST = "10.29.120.78"  # The server's hostname or IP address
     PORT = 8888  # The port used by the server
 
+    # first 6 numbers are thrusters 1-6 and 7th is time
+
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("10.29.120.78", 8566)) # associates socket with a specific network interface and port number
         s.listen() # makes this a listening socket that enables the server to accept connections
@@ -59,9 +62,9 @@ if __name__ == "__main__":
             while exit == False:
                 try:
                     data = conn.recv(1024 , socket.MSG_DONTWAIT)
+                    input = data.decode("utf-8")
                 except BlockingIOError:
-                    data = bytes("0 0 0 0 0 0 1", 'utf-8')
-                input = data.decode("utf-8")
+                    input = "0 0 0 0 0 0 1"
                 if(input.strip() == "done"):
                     conn.send("Disarmed!".encode())
                     exit = True
@@ -86,6 +89,7 @@ if __name__ == "__main__":
                         error = "Invalid Input\n"
                         print(error)
                         conn.send(error.encode())
+        s.close()
 
 '''
 
@@ -151,6 +155,6 @@ if __name__ == "__main__":
     disarm_rov(mav_connection)
     print("disarmed")
 
-    
+
 
     
