@@ -3,7 +3,6 @@ import time
 from pymavlink import mavutil
 import socket
 
-
 def arm_rov(mav_connection):
     """
     Arm the ROV, wait for confirmation
@@ -36,22 +35,12 @@ def run_motors_timed(mav_connection, seconds: int, motor_settings: list) -> None
             test_motor(mav_connection=mav_connection, motor_id=i, power=motor_settings[i])
         time.sleep(0.2)
 
-mav_connection = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
+
+
+
+#main
+
 if __name__ == "__main__":
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect(('10.29.120.78', 8669))
-        s.sendall(b'100')
-        data = s.recv(1024)
-
-    print(f"Received {data!r}")
-    
-
-
-    '''
-
-    
-
-
 
     ####
     # Initialize ROV
@@ -99,9 +88,6 @@ if __name__ == "__main__":
         run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0, 100,100, 0, 0])
         print("command four")
 
-
-
-
     # stop
     run_motors_timed(mav_connection, seconds=5, motor_settings=[0, 0, 0, 0, 0, 0])
     print("stopped")
@@ -113,4 +99,4 @@ if __name__ == "__main__":
 
     
 
-    '''
+    
