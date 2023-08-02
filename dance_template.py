@@ -3,7 +3,7 @@ import time
 from pymavlink import mavutil
 import socket
 import select
-
+import numpy as np
 def arm_rov(mav_connection):
     """
     Arm the ROV, wait for confirmation
@@ -36,68 +36,70 @@ def run_motors_timed(mav_connection, seconds: int, motor_settings: list) -> None
             test_motor(mav_connection=mav_connection, motor_id=i, power=motor_settings[i])
         time.sleep(0.2)
 
+def forward_cw_spin():
+    '''Makes robot go forward while spinning'''
+    sec = 3.8325
+    run_motors_timed(mav_connection, seconds=sec, motor_settings=[-100,-100 ,0 ,100, 0, 0])
+    #print("command one")
+    run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,100,0,100, 0, 0])
+    #print("command two")
+    run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0 ,-100 ,-100, 0, 0])
+    #print("command three")
+    run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0, 100,100, 0, 0])
+    #print("command four")
+    run_motors_timed(mav_connection, seconds=0.2, motor_settings=[100,-100 ,-100 ,100, 0, 0])
 
-#socket
+def forward_ccw_spin():
+    sec = 3.8325
+    run_motors_timed(mav_connection, seconds=sec, motor_settings=[-100,-100 ,100 ,0, 0, 0])
+    print("command one")
+    run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,100,100,0, 0, 0])
+    print("command two")
+    run_motors_timed(mav_connection, seconds=sec, motor_settings=[0,100 ,-100 ,-100, 0, 0])
+    print("command three")
+    run_motors_timed(mav_connection, seconds=sec, motor_settings=[0,100, 100,100, 0, 0])
+    print("command four")
+    run_motors_timed(mav_connection, seconds=0.2, motor_settings=[-100,100 ,100 ,-100, 0, 0])
 
-'''
-
-if __name__ == "__main__":
-    HOST = "10.29.120.78"  # The server's hostname or IP address
-    PORT = 8888  # The port used by the server
-
-    # first 6 numbers are thrusters 1-6 and 7th is time
-
-
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(("10.29.120.78", 8566)) # associates socket with a specific network interface and port number
-        s.listen() # makes this a listening socket that enables the server to accept connections
-        conn, addr = s.accept() # blocks execution and waits for an incoming connection
-        with conn:
-            print(f"Connected by {addr}")
-            exit = False
-            mav_connection = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
-            mav_connection.wait_heartbeat()
-            arm_rov(mav_connection)
-            s.setblocking(False)
-            while exit == False:
-                try:
-                    data = conn.recv(1024 , socket.MSG_DONTWAIT)
-                    input = data.decode("utf-8")
-                except BlockingIOError:
-                    input = "0 0 0 0 0 0 1"
-                if(input.strip() == "done"):
-                    conn.send("Disarmed!".encode())
-                    exit = True
-                else:
-                    settings = input.split(" ")
-                    run = True
-                    if(len(settings) != 7):
-                        run = False
-                    else:
-                        for i in range(0, 7):
-                            try:
-                                if(i == 6 and int(settings[i]) <= 0):
-                                    run = False
-                                elif(i != 6 and (int(settings[i]) < -100 or int(settings[i]) > 100)):
-                                    run = False
-                            except ValueError or TypeError:
-                                run = False
-                                break
-                    if(run):
-                        run_motors_timed(mav_connection, seconds=int(settings[6]), motor_settings=[int(settings[0]), int(settings[1]), int(settings[2]), int(settings[3]), int(settings[4]), int(settings[5])])
-                    else:
-                        error = "Invalid Input\n"
-                        print(error)
-                        conn.send(error.encode())
-        s.close()
-
-'''
-
-
-
-
+def jump():
+    run_motors_timed(mav_connection, seconds = 5, motor_settings=[0,0,0,0,-30,-30])
+    print("About to jump")
+    run_motors_timed(mav_connection, seconds = 1, motor_settings=[0,0,0,0,100,100])
 #main
+def pirouette(sec, power, times):
+    sec = sec/(power/100)
+    for i in range(times):
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[-power,-power ,0 ,power, 0, 0])
+        print("command one")
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[power,power,0,power, 0, 0])
+        print("command two")
 
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[power,0 ,-power ,-power, 0, 0])
+        print("command three")
+        run_motors_timed(mav_connection, seconds=sec, motor_settings=[power,0, power,power, 0, 0])
+        print("command four")
+       
+def makeBubbles(duration):
+    run_motors_timed(mav_connection, seconds=duration, motor_settings=[0,0, 0 ,0, 100, 100])
+
+def circle(Strafe,turn, power, time):
+    StrafeVector = np.array([-Strafe,Strafe,-Strafe,Strafe])
+    turnVector = np.array([turn,-turn,-turn,turn])
+
+    ResultantVector = turnVector+StrafeVector
+    scalingConstant = power/np.max(ResultantVector)
+    
+    ResultantVector = ResultantVector*scalingConstant
+    #print (ResultantVector)
+    run_motors_timed(mav_connection, seconds=time,motor_settings= ResultantVector.tolist())
+
+
+def figureEight():
+    
+    circle(100,10, 50,20)
+    run_motors_timed(mav_connection, seconds=20, motor_settings=[-50,50, -50 ,50, 0, 0])
+    circle(100,-10, 50,26.5)
+    run_motors_timed(mav_connection, seconds=27, motor_settings=[-50,50, -50 ,50, 0, 0])
 if __name__ == "__main__":
 
     ####
@@ -118,34 +120,11 @@ if __name__ == "__main__":
     Call sequence of calls to run_timed_motors to execute choreography
     Motors power ranges from -100 to 100
     """
-    sec = 3.8325
-   
-    for i in range(4):
-        run_motors_timed(mav_connection, seconds=sec, motor_settings=[-100,-100 ,0 ,100, 0, 0])
-        print("command one")
-        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,100,0,100, 0, 0])
-        print("command two")
-
-        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0 ,-100 ,-100, 0, 0])
-        print("command three")
-        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0, 100,100, 0, 0])
-        print("command four")
-       
-    run_motors_timed(mav_connection, seconds=5.825, motor_settings=[100, 0 ,0 ,100, 0, 0])
-    print("turn")
-
-
-    for i in range(4):
-        run_motors_timed(mav_connection, seconds=sec, motor_settings=[-100,-100 ,0 ,100, 0, 0])
-        print("command one")
-        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,100,0,100, 0, 0])
-        print("command two")
-
-        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0 ,-100 ,-100, 0, 0])
-        print("command three")
-        run_motors_timed(mav_connection, seconds=sec, motor_settings=[100,0, 100,100, 0, 0])
-        print("command four")
-
+    #forward_ccw_spin()
+    #run_motors_timed(mav_connection,5,[100,100,-100,-100,0,0])
+    #forward_cw_spin()
+    #pirouette(5,100,1)
+    figureEight()
     # stop
     run_motors_timed(mav_connection, seconds=5, motor_settings=[0, 0, 0, 0, 0, 0])
     print("stopped")
@@ -154,7 +133,3 @@ if __name__ == "__main__":
     ####
     disarm_rov(mav_connection)
     print("disarmed")
-
-
-
-    
